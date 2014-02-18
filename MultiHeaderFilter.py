@@ -17,7 +17,7 @@ class MultiHeaderFilter(Filter):
             self.log.warn('no pattern defined (skipping)')
             return
 
-        for header in self.headers:
+        for header in self.headers.split(';'):
             value = message.get_header(header)
             if re.search(self.pattern, value):
                 self.add_tags(message, *self.tags)
