@@ -6,6 +6,7 @@ from afew.FilterRegistry import register_filter
 @register_filter
 class MailmanFilter(Filter):
     message = 'Tagging Mailman administrivia'
+    tags = [ '+listsub', '+flagged', '+inbox' ]
 
     def handle_message(self, message):
         if message.get_header('list-id'):
@@ -13,5 +14,5 @@ class MailmanFilter(Filter):
             h_from = message.get_header('from')
 
             if '-request' in h_from and 'confirm' in h_subject:
-                self.add_tags(message, 'listsub', 'flagged', 'inbox')
+                super(MailmanFilter, self).handle_message(message)
 

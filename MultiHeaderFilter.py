@@ -20,5 +20,13 @@ class MultiHeaderFilter(Filter):
         for header in self.headers.split(';'):
             value = message.get_header(header)
             if re.search(self.pattern, value):
-                self.add_tags(message, *self.tags)
+                self.log.debug('found %s in %s = %s',
+                               self.pattern,
+                               header,
+                               value)
+                break
+        else:
+            return
+
+        super(MultiHeaderFilter, self).handle_message(message)
 
