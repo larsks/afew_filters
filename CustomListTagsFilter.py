@@ -24,7 +24,7 @@ class CustomListTagsFilter(Filter):
     def handle_message(self, message):
         matched = False
         for listid, tags in self.lists.items():
-            value = message.get_header('list-id')
+            value = message.get_header('list-id').lower()
             if listid in value:
                 self.add_tags(message, *tags)
                 matched = True
