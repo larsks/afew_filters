@@ -10,16 +10,17 @@ class BugzillaFilter(Filter):
     message = 'Tagging Bugzilla messages'
     pattern = '\[Bug (?P<bugid>\d+)\]'
 
-    simple_headers = [
-            'x-bugzilla-reason',
-            'x-bugzilla-type',
-            'x-bugzilla-watch-reason',
-            'x-bugzilla-classification',
-            'x-bugzilla-product',
-            'x-bugzilla-component',
-            'x-bugzilla-severity',
-            'x-bugzilla-status',
-            'x-bugzilla-priority',
+    headers = [
+            ('x-bugzilla-reason'         , True , None) ,
+            ('x-bugzilla-type'           , False , None) ,
+            ('x-bugzilla-watch-reason'   , False , None) ,
+            ('x-bugzilla-classification' , False , None) ,
+            ('x-bugzilla-product'        , False , None) ,
+            ('x-bugzilla-component'      , False , None) ,
+            ('x-bugzilla-severity'       , False , None) ,
+            ('x-bugzilla-status'         , False , None) ,
+            ('x-bugzilla-priority'       , False , None) ,
+            ('x-bugzilla-flags'          , True  , ', ') ,
     ]
 
     def handle_message(self, message):
@@ -32,14 +33,19 @@ class BugzillaFilter(Filter):
                 self.add_tags(message,
                               'bug/{bugid}'.format(**match.groupdict()))
 
-            for header in self.simple_headers:
+            for header, needs_split, sep in self.headers:
                 data = message.get_header(header)
                 if not data:
                     continue
 
-                data = data.replace(' ', '-')
                 data = data.lower()
 
+                if needs_split:
+                    data = data.split(sep)
+                else:
+                    data = [data.replace(' ', '-')]
+
                 header = header[11:]
-                self.add_tags(message, 'bz/{}/{}'.format(header, data))
+                for val in data:
+                    self.add_tags(message, 'bz/{}/{}'.format(header, val))
 
