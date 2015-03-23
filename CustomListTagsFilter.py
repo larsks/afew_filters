@@ -1,10 +1,8 @@
 from __future__ import print_function, absolute_import, unicode_literals
 
-import re
-from email.utils import parseaddr
-
 from afew.filters.BaseFilter import Filter
 from afew.FilterRegistry import register_filter
+
 
 @register_filter
 class CustomListTagsFilter(Filter):
@@ -14,7 +12,7 @@ class CustomListTagsFilter(Filter):
     def __init__(self, database, **kwargs):
         self.lists = {}
 
-        for k,v in kwargs.items():
+        for k, v in kwargs.items():
             if not hasattr(self, k):
                 self.lists[k] = v.split(';')
                 del kwargs[k]
@@ -34,4 +32,3 @@ class CustomListTagsFilter(Filter):
 
         if not matched:
             self.add_tags(message, self.unmatched_tag)
-

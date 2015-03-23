@@ -1,9 +1,8 @@
 from __future__ import print_function, absolute_import, unicode_literals
 
-import re
-
 from afew.filters.BaseFilter import Filter
 from afew.FilterRegistry import register_filter
+
 
 @register_filter
 class RTFilter(Filter):
@@ -16,7 +15,7 @@ class RTFilter(Filter):
 
     def handle_message(self, message):
         if message.get_header('x-rt-loop-prevention'):
-            self.add_tags(message, 'req')
+            self.add_tags(message, 'req', 'req/rt')
 
             reqid = message.get_header('rt-ticket')
             if reqid:
@@ -38,4 +37,3 @@ class RTFilter(Filter):
                 header = header[5:]
                 for val in data:
                     self.add_tags(message, 'rt/{}/{}'.format(header, val))
-

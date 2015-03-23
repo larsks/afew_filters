@@ -19,7 +19,7 @@ class LaunchpadFilter(Filter):
 
     def handle_message(self, message):
         if message.get_header('x-launchpad-bug'):
-            self.add_tags(message, 'bug')
+            self.add_tags(message, 'bug', 'bug/lp')
 
             match = re.search('\[Bug (?P<bugid>\d+)\]',
                               message.get_header('subject'))
@@ -37,4 +37,3 @@ class LaunchpadFilter(Filter):
                 header = header[16:]
                 for value in data.split():
                     self.add_tags(message, 'lp/{}/{}'.format(header, value))
-

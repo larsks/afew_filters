@@ -5,27 +5,28 @@ import re
 from afew.filters.BaseFilter import Filter
 from afew.FilterRegistry import register_filter
 
+
 @register_filter
 class BugzillaFilter(Filter):
     message = 'Tagging Bugzilla messages'
     pattern = '\[Bug (?P<bugid>\d+)\]'
 
     headers = [
-            ('x-bugzilla-reason'         , True , None) ,
-            ('x-bugzilla-type'           , False , None) ,
-            ('x-bugzilla-watch-reason'   , False , None) ,
-            ('x-bugzilla-classification' , False , None) ,
-            ('x-bugzilla-product'        , False , None) ,
-            ('x-bugzilla-component'      , False , None) ,
-            ('x-bugzilla-severity'       , False , None) ,
-            ('x-bugzilla-status'         , False , None) ,
-            ('x-bugzilla-priority'       , False , None) ,
-            ('x-bugzilla-flags'          , True  , ', ') ,
+        ('x-bugzilla-reason'         , True , None) ,
+        ('x-bugzilla-type'           , False , None) ,
+        ('x-bugzilla-watch-reason'   , False , None) ,
+        ('x-bugzilla-classification' , False , None) ,
+        ('x-bugzilla-product'        , False , None) ,
+        ('x-bugzilla-component'      , False , None) ,
+        ('x-bugzilla-severity'       , False , None) ,
+        ('x-bugzilla-status'         , False , None) ,
+        ('x-bugzilla-priority'       , False , None) ,
+        ('x-bugzilla-flags'          , True  , ', ') ,
     ]
 
     def handle_message(self, message):
         if message.get_header('x-bugzilla-url'):
-            self.add_tags(message, 'bug')
+            self.add_tags(message, 'bug', 'bug/bz')
 
             match = re.search(self.pattern,
                               message.get_header('subject'))
@@ -48,4 +49,3 @@ class BugzillaFilter(Filter):
                 header = header[11:]
                 for val in data:
                     self.add_tags(message, 'bz/{}/{}'.format(header, val))
-

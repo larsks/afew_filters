@@ -5,6 +5,7 @@ import re
 from afew.filters.BaseFilter import Filter
 from afew.FilterRegistry import register_filter
 
+
 @register_filter
 class MultiHeaderFilter(Filter):
     message = 'Tag message containing pattern in one of many headers'
@@ -29,4 +30,3 @@ class MultiHeaderFilter(Filter):
             return
 
         super(MultiHeaderFilter, self).handle_message(message)
-
